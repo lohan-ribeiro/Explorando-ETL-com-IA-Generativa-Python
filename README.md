@@ -1,6 +1,7 @@
 # Explorando ETL Com IA Generativa
 
-Implementação de um pipeline ETL inteligente em Python utilizando IA Generativa para transformar e enriquecer dados de forma automatizada.
+Implementação prática de um pipeline de dados **ETL (Extract, Transform, Load)** inteligente. O projeto extrai dados de clientes, utiliza a API de IA Generativa da OpenAI para criar mensagens de marketing ultra-personalizadas com base no perfil de cada usuário e atualiza a base de dados final.
+<br></br>
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -9,48 +10,93 @@ Python 3.13+ |
 [OpenAI](https://platform.openai.com/docs/api-reference/introduction) | 
 [Pandas](https://pandas.pydata.org/docs/getting_started/index.html) | 
 [Dotenv](https://www.dotenv.org/docs/)    
+<br></br>
 
 ## 🎯 Objetivo
 
 Desenvolver um fluxo ETL(Extração, Transformação e Carregamento)  e utiliza IA Generativa para criar mensagens personalizadas para cada usuário.
+<br></br>
 
-#### Extração (E)
-Ler o arquivo USERS.csv e carregar os IDs dos usuários.
+## 🎯 O Fluxo ETL
+```mermaid
+graph TD
+    A[Extração: CSV/JSON] --> B[Transformação: Prompt OpenAI]
+    B --> C[Carregamento: Salvar de volta no CSV]
+````
 
-#### Transformação (T)
-Para cada usuário, gerar uma mensagem de marketing personalizada usando a API do ChatGPT (OpenAI).
-A mensagem deve:
+### Extração (Extract)
+O pipeline lê os dados brutos a partir de um arquivo USERS.csv ou mock_users.json, mapeando informações cruciais como:
+- ID do Usuário
+- Nome
+- Perfil de Investidor (ex: Conservador, Moderado, Arrojado)
+- Saldo em Conta
 
-Falar sobre investimentos, ser amigável, ser personalizada conforme o perfil do cliente.
+### Transformação (Transform)
+Para cada usuário extraído, o sistema monta um prompt dinâmico e faz uma requisição à API do ChatGPT (OpenAI). A IA gera um conselho de investimento personalizado e amigável:
 
-#### Carregamento (L)
-Atualizar o arquivo USERS.csv, adicionando a nova coluna com as mensagens personalizadas geradas pela IA, substituindo o conteúdo anterior ou atualizando registros existentes.
+> "Olá [Nome], vimos que você tem um perfil [Perfil]. Que tal conhecer nossas opções de..."
+
+### Carregamento (Load)
+Os dados transformados (mensagens personalizadas) são injetados de volta no arquivo USERS.csv, gerando uma nova coluna contendo o retorno enriquecido pela IA.
+<br></br>
 
 ## 📚 Estrutura do Projeto
-
 ```
-web_crawler_hn/  
+etl-ia-generativa-python/  
 ├── src/  
-│   ├── main.py           Inicia o programa.
+│   └── main.py           # Script principal que executa o fluxo ETL
 ├── data/
-|   ├── USERS.csv         Armazenamento dos IDs.
-│   └── mock_users.json   Responsável por armazenar os dados.
-├── requirements.txt      Requisitos para rodar o programa.
-├── README.md  
-├── .gitignore
-├── .env                  Variáveis de Ambiente.
-└── LICENSE
+│   ├── USERS.csv         # Base de dados de usuários final (atualizada pelo pipeline)
+│   └── mock_users.json   # Dados fictícios para testes locais
+├── .env.example          # Exemplo de configuração das variáveis de ambiente
+├── .gitignore            # Proteção para não subir a API Key e venv
+├── requirements.txt      # Dependências do projeto
+└── README.md             # Documentação do projeto
 ```
 
 ## 🔧 Como Executar
-```
-python -m venv venv  
-source venv/bin/activate  # Linux/macOS  
-venv\Scripts\activate     # Windows  
 
-pip install -r requirements.txt  
-python src/main.py
+### Pré-requisitos
+Antes de começar, você precisará ter o Python 3.13+ instalado e uma API Key da OpenAI.
+
+1. Clonar o repositório
+````bash
+git clone https://github.com/seu-usuario/etl-genai-python.git
+````
+
+2. Configurar Variáveis de Ambiente
+Crie um arquivo .env na raiz do projeto baseado no .env.example e adicione sua chave de API da OpenAI:
+
+````env
+OPENAI_API_KEY=sua_chave_aqui_projeto
+````
+
+3. Configurar o Ambiente Virtual (Virtualenv)
+```bash
+# Criar o ambiente virtual
+python -m venv venv
+ 
+# Ativar o ambiente
+
+# No Linux/macOS:
+source venv/bin/activate
+
+# No Windows (PowerShell):
+venv\Scripts\Activate.ps1
+# No Windows (bash):
+venv\Scripts\activate
 ```
+
+4. Instalar as Dependências
+````bash
+pip install -r requirements.txt
+````
+
+5. Executar o Pipeline
+````bash
+python src/main.py
+````
+
 ## ⚠️ Aviso
 
 Todos os dados usando neste projeto são fictícios e utilizados apenas para fins educacionais. 
